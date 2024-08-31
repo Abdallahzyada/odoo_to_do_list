@@ -1,0 +1,80 @@
+<odoo>
+    <record id="task_view_tree" model="ir.ui.view">
+        <field name="name">task tree</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="task_name"/>
+                <field name="assign_to"/>
+                <field name="due_date"/>
+                <field name="status"/>
+                <field name="description" optional="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="todo_task_view_form" model="ir.ui.view">
+        <field name="name">todo task form</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <header >
+                        <button name="new_action" type="object" class="btn-primary" string="New Task"
+                                invisible="status=='new'"/>
+                        <button name="progress_action" type="object" class="btn-secondary" string="IN Progress"
+                                invisible="status!='new'"/>
+                        <button name="completed_action" type="object" class="btn-success" string="Completed"
+                                invisible="status!='progress'"/>
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <group>
+                        <group string="General Info.">
+                            <field name="task_name"/>
+                            <field name="assign_to"/>
+                            <field name="due_date"/>
+                            <field name="description"/>
+                        </group>
+                    </group>
+                    <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="task_view_search" model="ir.ui.view">
+    <field name="name">task search</field>
+        <field name="model">todo.task</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="task_name"/>
+                <field name="assign_to"/>
+
+                <filter name="new_task" string="New Tasks" domain="[('status', '=', 'new')]"/>
+                <filter name="progress_task" string="IN-Progress Tasks" domain="[('status', '=', 'progress')]"/>
+                <filter name="completed_tasks" string="Completed Tasks" domain="[('status', '=', 'completed')]"/>
+
+                <filter name="group_assign_to" string="Assign To" context="{'group_by': 'assign_to'}"/>
+                <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                <filter name="group_due_date" string="Due Date" context="{'group_by': 'due_date'}"/>
+            </search>
+        </field>
+    </record>
+
+
+
+    <record id="task_action" model="ir.actions.act_window">
+        <field name="name">tasks</field>
+        <field name="res_model">todo.task</field>
+    </record>
+    <menuitem
+    id="task_menu_item"
+    name="Tasks"
+    parent="tasks_menu"
+    action="task_action"
+    />
+</odoo>
