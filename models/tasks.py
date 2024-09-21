@@ -1,21 +1,42 @@
 from odoo import models, fields, api
 from datetime import datetime
+
+from odoo.exceptions import ValidationError
+
+
 class Task(models.Model):
 
     _name = 'todo.task'
     _description = 'To-Do Task'
+    _rec_name = 'task_name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    task_name = fields.Char(tracking=1)
-    assign_to = fields.Many2one('res.partner', string='Assign To', tracking=1)
+
+    task_name = fields.Char('Task Name',tracking=1)
+    assign_to_id = fields.Many2one('res.partner', string='Assign To', tracking=1)
     description = fields.Text(tracking=1)
-    due_date = fields.Datetime(tracking=1)
+    due_date = fields.Date(tracking=1)
+    is_late = fields.Boolean()
+    estimated_time = fields.Integer()
     task_name_repeat = fields.Char(string="Repeated Task Name", compute="_compute_task_name_repeat", store=True)
     status = fields.Selection([
         ('new', 'New'),
         ('progress', 'IN Progress'),
         ('completed', 'Completed'),
+        ('closed', 'Closed'),
     ])
+
+    line_ids = fields.One2many('task.line', 'task_id')
+    total_time = fields.Integer(compute='_compute_total_time')
+
+    @api.depends('line_ids', 'estimated_time', 'line_ids.time')
+    def _compute_total_time(self):
+        for rec in self:
+            if rec.line_ids:
+                for line in rec.line_ids:
+                    rec.total_time += line.time
+                    if rec.total_time > rec.estimated_time:
+                        raise ValidationError('Too Much Time!')
 
     @api.depends('status', 'task_name')
     def _compute_task_name_repeat(self):
@@ -32,16 +53,38 @@ class Task(models.Model):
                 'warning': {'title' : 'warning', 'message': "The Task Can't be in the past"}
             }
 
-    def new_action(self):
+    def action_new(self):
         for rec in self:
             rec.status = 'new'
 
-    def progress_action(self):
+    def action_progress(self):
         for rec in self:
             rec.write(
                 {'status': 'progress'}
             )
 
-    def completed_action(self):
+    def action_competed(self):
         for rec in self:
             rec.status = 'completed'
+
+    def action_closed(self):
+        for rec in self:
+            rec.status = 'closed'
+
+    # def check_task_due_date(self):
+    #     task_ids = self.search([])
+    #     for rec in task_ids:
+    #         if rec.due_date and rec.due_date < fields.date.today():
+    #             if rec.status != 'closed' or rec.status != 'completed':
+    #                 rec.is_late = True
+
+
+
+class TaskLine(models.Model):
+    _name = 'task.line'
+
+    date = fields.Date()
+    task_id = fields.Many2one('todo.task')
+    description = fields.Text()
+    time = fields.Integer()
+

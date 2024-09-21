@@ -5,10 +5,10 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="task_name"/>
-                <field name="assign_to"/>
+                <field name="assign_to_id"/>
                 <field name="due_date"/>
+                <field name="estimated_time"/>
                 <field name="status"/>
-                <field name="description" optional="1"/>
             </tree>
         </field>
     </record>
@@ -20,28 +20,41 @@
             <form>
                 <sheet>
                     <header >
-                        <button name="new_action" type="object" class="btn-primary" string="New Task"
+                        <button name="action_new" type="object" class="btn-primary" string="New Task"
                                 invisible="status=='new'"/>
-                        <button name="progress_action" type="object" class="btn-secondary" string="IN Progress"
+                        <button name="action_progress" type="object" class="btn-secondary" string="IN Progress"
                                 invisible="status!='new'"/>
-                        <button name="completed_action" type="object" class="btn-success" string="Completed"
+                        <button name="action_competed" type="object" class="btn-success" string="Completed"
                                 invisible="status!='progress'"/>
                         <field name="status" widget="statusbar"/>
                     </header>
                     <group>
                         <group string="General Info.">
                             <field name="task_name"/>
-                            <field name="assign_to"/>
+                            <field name="assign_to_id"/>
                             <field name="due_date"/>
                             <field name="description"/>
+                            <field name="estimated_time"/>
+                            <field name="total_time" invisible="1"/>
                         </group>
                     </group>
-                    <div class="oe_chatter">
+                    <notebook>
+                        <page string="TimeSheet">
+                            <field name="line_ids">
+                                <tree editable="button">
+                                    <field name="task_id"/>
+                                    <field name="description"/>
+                                    <field name="time"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
                 </div>
-                </sheet>
             </form>
         </field>
     </record>
@@ -52,13 +65,13 @@
         <field name="arch" type="xml">
             <search>
                 <field name="task_name"/>
-                <field name="assign_to"/>
+                <field name="assign_to_id"/>
 
                 <filter name="new_task" string="New Tasks" domain="[('status', '=', 'new')]"/>
                 <filter name="progress_task" string="IN-Progress Tasks" domain="[('status', '=', 'progress')]"/>
                 <filter name="completed_tasks" string="Completed Tasks" domain="[('status', '=', 'completed')]"/>
 
-                <filter name="group_assign_to" string="Assign To" context="{'group_by': 'assign_to'}"/>
+                <filter name="group_assign_to" string="Assign To" context="{'group_by': 'assign_to_id'}"/>
                 <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
                 <filter name="group_due_date" string="Due Date" context="{'group_by': 'due_date'}"/>
             </search>
