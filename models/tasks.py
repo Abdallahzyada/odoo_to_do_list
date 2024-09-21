@@ -28,6 +28,7 @@ class Task(models.Model):
 
     line_ids = fields.One2many('task.line', 'task_id')
     total_time = fields.Integer(compute='_compute_total_time')
+    active = fields.Boolean(default=True)
 
     @api.depends('line_ids', 'estimated_time', 'line_ids.time')
     def _compute_total_time(self):

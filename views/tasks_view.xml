@@ -9,6 +9,7 @@
                 <field name="due_date"/>
                 <field name="estimated_time"/>
                 <field name="status"/>
+                <field name="active" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -36,6 +37,7 @@
                             <field name="description"/>
                             <field name="estimated_time"/>
                             <field name="total_time" invisible="1"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
