@@ -72,14 +72,6 @@ class Task(models.Model):
         for rec in self:
             rec.status = 'closed'
 
-    # def check_task_due_date(self):
-    #     task_ids = self.search([])
-    #     for rec in task_ids:
-    #         if rec.due_date and rec.due_date < fields.date.today():
-    #             if rec.status != 'closed' or rec.status != 'completed':
-    #                 rec.is_late = True
-
-
 
 class TaskLine(models.Model):
     _name = 'task.line'

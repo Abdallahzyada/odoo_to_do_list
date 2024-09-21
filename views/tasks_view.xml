@@ -9,7 +9,7 @@
                 <field name="due_date"/>
                 <field name="estimated_time"/>
                 <field name="status"/>
-                <field name="active" invisible="1"/>
+                <field name="active" optional="1"/>
             </tree>
         </field>
     </record>
@@ -86,6 +86,17 @@
         <field name="name">tasks</field>
         <field name="res_model">todo.task</field>
     </record>
+
+     <record id="task_close_server_action" model="ir.actions.server">
+        <field name="name">Close</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_closed()
+        </field>
+    </record>
+
     <menuitem
     id="task_menu_item"
     name="Tasks"
