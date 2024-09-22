@@ -46,6 +46,7 @@
                             <field name="line_ids">
                                 <tree editable="button">
                                     <field name="task_id"/>
+                                    <field name="date"/>
                                     <field name="time"/>
                                     <field name="description"/>
                                 </tree>

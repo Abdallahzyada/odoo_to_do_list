@@ -10,6 +10,7 @@
         'security/ir.model.access.csv',
         'views/base_menu.xml',
         'views/tasks_view.xml',
+        'reports/task_report.xml',
     ],
     'application': True
 }
