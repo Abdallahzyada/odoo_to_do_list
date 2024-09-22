@@ -38,6 +38,8 @@ class Task(models.Model):
                     rec.total_time += line.time
                     if rec.total_time > rec.estimated_time:
                         raise ValidationError('Too Much Time!')
+            else:
+                rec.total_time = rec.total_time
 
     @api.depends('status', 'task_name')
     def _compute_task_name_repeat(self):
@@ -71,6 +73,14 @@ class Task(models.Model):
     def action_closed(self):
         for rec in self:
             rec.status = 'closed'
+
+
+    def check_due_date_late(self):
+        tasks_ids = self.search([])
+        for rec in tasks_ids:
+            if rec.due_date and rec.due_date < fields.date.today():
+                if rec.status != 'closed' and rec.status != 'completed':
+                    rec.is_late = True
 
 
 class TaskLine(models.Model):
