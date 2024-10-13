@@ -32,6 +32,7 @@
                     </header>
                     <group>
                         <group string="General Info.">
+                             <field name="ref"/>
                             <field name="task_name"/>
                             <field name="assign_to_id"/>
                             <field name="due_date"/>

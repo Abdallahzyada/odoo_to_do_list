@@ -11,7 +11,7 @@ class Task(models.Model):
     _rec_name = 'task_name'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
-
+    ref = fields.Char(default="New Task", readonly=1)
     task_name = fields.Char('Task Name',tracking=1)
     assign_to_id = fields.Many2one('res.partner', string='Assign To', tracking=1)
     description = fields.Text(tracking=1)
@@ -81,6 +81,14 @@ class Task(models.Model):
             if rec.due_date and rec.due_date < fields.date.today():
                 if rec.status != 'closed' and rec.status != 'completed':
                     rec.is_late = True
+
+
+    @api.model
+    def create(self, val_list):
+        res = super(Task, self).create(val_list)
+        if res.ref == 'New Task':
+            res.ref = self.env['ir.sequence'].next_by_code('task_seq')
+        return res
 
 
 class TaskLine(models.Model):
