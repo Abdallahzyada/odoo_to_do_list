@@ -100,6 +100,16 @@
         </field>
     </record>
 
+    <record id="assign_task_wizard_server_action" model="ir.actions.server">
+        <field name="name">Assign Task</field>
+        <field name="model_id" ref="model_todo_task"/>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.open_action_confirm_wizard()
+        </field>
+    </record>
+
     <record id="check_late_task_cron" model="ir.cron">
         <field name="name">To-Do: check late tasks</field>
         <field name="model_id" ref="model_todo_task"/>

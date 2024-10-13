@@ -11,6 +11,7 @@
         'data/sequence.xml',
         'views/base_menu.xml',
         'views/tasks_view.xml',
+        'wizard/assign_task_wizard.xml',
         'reports/task_report.xml',
     ],
     'application': True

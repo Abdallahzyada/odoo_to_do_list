@@ -90,6 +90,10 @@ class Task(models.Model):
             res.ref = self.env['ir.sequence'].next_by_code('task_seq')
         return res
 
+    def open_action_confirm_wizard(self):
+        action = self.env['ir.actions.actions']._for_xml_id('odoo_to_do_list.assign_task_wizard_action')
+        # action['context'] = {'default_task_id' : self.id}
+        return action
 
 class TaskLine(models.Model):
     _name = 'task.line'
